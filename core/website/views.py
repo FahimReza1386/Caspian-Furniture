@@ -8,3 +8,6 @@ class IndexView(TemplateView):
 
 class AboutPageView(TemplateView):
     template_name="website/About.html"
+
+class ContactPageView(TemplateView):
+    template_name="website/Contact.html"
