@@ -4,3 +4,7 @@ from django.views.generic import TemplateView
 
 class IndexView(TemplateView):
     template_name="website/Home.html"
+
+
+class AboutPageView(TemplateView):
+    template_name="website/About.html"
