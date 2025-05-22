@@ -1,5 +1,6 @@
 from django.db import models
 from colorfield.fields import ColorField
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class SofaCategoryModel(models.Model):
@@ -55,7 +56,12 @@ class SofaModel(models.Model):
     image=models.ImageField(upload_to="products/")
     dimentions=models.CharField(max_length=50)
     material= models.ManyToManyField(SofaMaterialModel)
-
+    price=models.DecimalField(default=0, max_digits=10, decimal_places=0)
+    status=models.IntegerField(choices=SofaStatusType.choices, default=SofaStatusType.publish.value)
+    discount_percent= models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    avg_rate=models.FloatField(default=0.0)
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
     def __str__(self):
         return self.name
 
