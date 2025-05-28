@@ -1,6 +1,7 @@
 from django.db import models
 from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
 # Create your models here.
 
 class SofaCategoryModel(models.Model):
@@ -27,7 +28,6 @@ class SofaColorsModel(models.Model):
         return self.name
 
 
-
 class SofaBrandModel(models.Model):
     name=models.CharField(max_length=200, unique=True)
 
@@ -43,6 +43,16 @@ class SofaMaterialModel(models.Model):
         return self.name
 
 
+WarrantyNumber = [
+    (3, "۳ ماه"),
+    (6, "۶ ماه"),
+    (9, "۹ ماه"),
+    (12, "12 ماه"),
+    (16, "16 ماه"),
+    (18, "18 ماه"),
+    (22, "22 ماه"),
+    (24, "24 ماه"),
+                  ]
 
 
 class SofaModel(models.Model):
@@ -60,13 +70,23 @@ class SofaModel(models.Model):
     status=models.IntegerField(choices=SofaStatusType.choices, default=SofaStatusType.publish.value)
     discount_percent= models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     avg_rate=models.FloatField(default=0.0)
+    Warranty=models.IntegerField(choices=WarrantyNumber, default=WarrantyNumber[0][0], null=True)
+    weight= models.IntegerField(default=0, null=True)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
+
+ 
+ 
     def __str__(self):
         return self.name
 
+    def is_discounted(self):
+        return self.discount_percent != 0
 
-
+    def get_price_after_sale(self):
+        amout_price = self.price * Decimal(self.discount_percent/100)
+        price= self.price - amout_price
+        return round(price)
 
 
 class SofaImageModel(models.Model):
