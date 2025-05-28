@@ -536,3 +536,7 @@ body {
 .custom-navbar{
     padding: 0 !important;
 }
+
+.btn:hover {
+    box-shadow: 5px 10px 9px -7px  black;
+}

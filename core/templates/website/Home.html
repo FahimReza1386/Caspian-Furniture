@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block content %}
 
@@ -11,7 +12,7 @@
 						<div class="intro-excerpt">
 							<h1>طراحی دکوراسیون <span clsas="d-block">و مبلمان کاسپین</span></h1>
 							<p class="mb-4">در مبلمان کاسپین ما با توجه به نقشه خانه شما طرح های دکوراسیون و مبله شدن خانه را اراپه میدهیم.</p>
-							<p><a href="" class="btn btn-secondary me-2"> محصولات</a><a href="#" class="btn btn-white-outline">نمونه کار</a></p>
+							<p><a href="" class="btn btn-secondary me-2" > محصولات</a><a href="#" class="btn btn-white-outline btn-portfolio" style="margin-right: 10px;  border: solid 1px;">نمونه کار</a></p>
 						</div>
 					</div>
 					<div class="col-lg-7">
@@ -177,7 +178,7 @@
 	<div class="popular-product">
 		<div class="container">
 			<div class="row">
-
+<!-- 				
 				<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
 					<div class="product-item-sm d-flex">
 						<div class="thumbnail">
@@ -215,7 +216,9 @@
 							<p><a href="#">Read More</a></p>
 						</div>
 					</div>
-				</div>
+				</div> -->
+
+				{% show_latest_product %}
 
 			</div>
 		</div>

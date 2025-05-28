@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load shop_tags %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/chat_gpt.css' %}">
@@ -296,43 +297,7 @@
             </div>
         </div>
         
-        <!-- محصولات مرتبط -->
-        <div class="related-products">
-            <h2 class="section-title">محصولات مرتبط</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x300/157347/ffffff?text=محصول+مرتبط+1" alt="محصول مرتبط 1" class="product-card-img">
-                    <div class="product-card-body">
-                        <h3 class="product-card-title">محصول مشابه سبز تیره</h3>
-                        <div class="product-card-price">۱۲۹,۰۰۰ تومان</div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x300/20c997/ffffff?text=محصول+مرتبط+2" alt="محصول مرتبط 2" class="product-card-img">
-                    <div class="product-card-body">
-                        <h3 class="product-card-title">محصول مشابه سبز روشن</h3>
-                        <div class="product-card-price">۱۵۹,۰۰۰ تومان</div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x300/198754/ffffff?text=محصول+مرتبط+3" alt="محصول مرتبط 3" class="product-card-img">
-                    <div class="product-card-body">
-                        <h3 class="product-card-title">محصول مکمل سبز</h3>
-                        <div class="product-card-price">۹۹,۰۰۰ تومان</div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x300/0d6efd/ffffff?text=محصول+مرتبط+4" alt="محصول مرتبط 4" class="product-card-img">
-                    <div class="product-card-body">
-                        <h3 class="product-card-title">محصول جانبی آبی</h3>
-                        <div class="product-card-price">۷۹,۰۰۰ تومان</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% show_similar_product product=object %}
     </div>
 {% endblock %}
 
