@@ -19,6 +19,7 @@
 	<link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet">
 	<link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 	{% block extra_css %}{% endblock %}
 	<title>مبلمان کاسپین</title>
 </head>
@@ -40,6 +41,11 @@
 					<li {% if request.resolver_match.view_name == 'website:index' %} class="nav-item active" {% endif %}>
 						<a class="nav-link" href="{% url 'website:index' %}">خانه</a>
 					</li>
+
+					{% if request.user.is_authenticated is not True %}
+					<li {% if request.resolver_match.view_name == 'accounts:login' %} class="active" {% endif %}><a
+						class="nav-link" href="{% url 'accounts:login' %}">ورود</a></li>
+					{% endif %}
 					<li {% if request.resolver_match.view_name == 'shop:product-grid' %} class="active" {% endif %}><a
 							class="nav-link" href="{% url 'shop:product-grid' %}">محصولات</a></li>
 					<li {% if request.resolver_match.view_name == 'website:about' %} class="active" {% endif %}><a
@@ -48,10 +54,13 @@
 							class="nav-link" href="{% url 'website:contact' %}">ارتباط با ما</a></li>
 					<li><a class="nav-link" href="services.html">خدمات ما</a></li>
 					<li><a class="nav-link" href="blog.html">اخبار</a></li>
+
 				</ul>
 
 				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-					<li><a class="nav-link" href="#"><img src="{% static 'img/user.svg' %}"></a></li>
+					{% if request.user.is_authenticated %}
+						<li><a class="nav-link" href="#"><img src="{% static 'img/user.svg' %}"></a></li>
+					{% endif %}
 					<li><a class="nav-link" href="cart.html"><img src="{% static 'img/cart.svg' %}"></a></li>
 				</ul>
 			</div>
@@ -182,6 +191,8 @@
 	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 	<script src="{% static 'js/tiny-slider.js' %}"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	{% block extra_js %}{% endblock %}
+	{% include 'messages.html' %}
 </body>
 </html>
