@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load shop_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/chat_gpt.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <!-- هدر محصول -->
+        <div class="product-header">
+            <div class="product-gallery">
+                <img id="mainImage" src="{{ object.image.url }}" alt="محصول اصلی" class="main-image">
+                <div class="thumbnail-container">
+                    {% for image in extra_img %}
+                        {% if image.product.id == object.id %}
+                            <img src="{{ image.file.url }}" alt="نمونه 1" class="thumbnail active" onclick="changeImage(this)">
+                       {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="product-summary">
+                <h1 class="product-title">{{ object.name }}</h1>
+                
+                <div class="product-meta">
+                    <span>
+                        <i class="fas fa-store"></i>
+                        فروشگاه اینترنتی سبز
+                    </span>
+                    <span>
+                        <i class="fas fa-barcode"></i>
+                        کد محصول: PRD-198754
+                    </span>
+                    <span>
+                        <i class="fas fa-box-open"></i>
+                        موجود در انبار
+                    </span>
+                </div>
+                
+                <div class="rating-badge">
+                    <span class="rating-stars">★★★★★</span>
+                    4.8 از 5 (47 نظر)
+                </div>
+                
+                <div class="product-price">
+                    {% if object.is_discounted %}
+                    <span class="price-original">{{ object.price|intcomma }} تومان</span>
+                    {{ object.get_price_after_sale|intcomma  }} تومان
+                    <span class="price-discount">{{ object.discount_percent }}% تخفیف</span>
+                    {% else %}
+                    <span class="price-original">{{ object.price|intcomma }} تومان</span>
+                    {% endif %}
+                </div>
+                
+                <div class="product-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <span>رنگ زیبا و با دوام</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <span>جنس مرغوب و با کیفیت</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <span>گارانتی 24 ماهه</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <span>ارسال رایگان برای خریدهای بالای ۲۰۰ هزار تومان</span>
+                    </div>
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-shopping-cart btn-icon"></i>
+                        افزودن به سبد خرید
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="far fa-heart btn-icon"></i>
+                        افزودن به علاقه‌مندی‌ها
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تب‌های جزئیات محصول -->
+        <div class="product-tabs">
+            <div class="tab-header">
+                <div class="tab-btn active" data-tab="description">توضیحات محصول</div>
+                <div class="tab-btn" data-tab="specs">مشخصات فنی</div>
+                <div class="tab-btn" data-tab="reviews">نظرات (47)</div>
+                <div class="tab-btn" data-tab="qa">پرسش و پاسخ</div>
+            </div>
+            
+            <div class="tab-content">
+                <!-- تب توضیحات محصول -->
+                <div class="tab-pane active" id="description">
+                    <div class="description-content">
+                        <h4>دسته بندی های محصول :</h4>
+
+                        {% for categories in object.category.all %}
+                        {{ categories.name }}
+                            {% if forloop.first %}
+                            ,
+                           {% endif %}
+                        {% endfor %}
+                        
+                        <h4>ویژگی‌های کلیدی:</h4>
+                        <ul>
+                            {% for material in object.material.all %}
+
+                            <li>{{ material.name }}</li>
+                            {% endfor %}
+
+                        </ul>
+                        
+                        <h4>جزئیات محصول:</h4>
+                        <p>{{ object.description }}</p>
+                        
+                        <h4>رنگ محصول :</h4>
+                        <ul class="d-flex flex-wrap justify-content-center ">
+                            {% for color in object.color.all %}
+                                <li style="margin: 10px 30px;">{{ color.name }} </li>
+                                <input type="color" value="{{ color.color }}">
+                
+                                {% if forloop.first %}{% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- تب مشخصات فنی -->
+                <div class="tab-pane" id="specs">
+                    <table class="specs-table">
+                        <tr>
+                            <th>برند</th>
+                            <td>{{ object.brand.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>مدل</th>
+                            <td>PRD-198754</td>
+                        </tr>
+                        <tr>
+                            <th>رنگ</th>
+
+                            {% for color in object.color.all %}
+                                <td>{{ color.name }}</td>
+
+                            {% if forloop.first %}{% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>جنس</th>
+                            {% for material in object.material.all %}
+                            <td>{{ material.name }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>ابعاد</th>
+                            <td>{{ object.dimentions }} سانتی متر</td>
+                        </tr>
+                        <tr>
+                            <th>وزن</th>
+                            <td>{{ object.weight }} گرم</td>
+                        </tr>
+                        <tr>
+                            <th>کشور سازنده</th>
+                            <td>ایران</td>
+                        </tr>
+                        <tr>
+                            <th>گارانتی</th>
+                            <td>{{ object.Warranty }} ماهه</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- تب نظرات -->
+                <div class="tab-pane" id="reviews">
+                    <div class="reviews-section">
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="review-author">علی محمدی</span>
+                                <span class="review-date">۱۴۰۲/۰۵/۱۵</span>
+                            </div>
+                            <div class="review-rating">★★★★★</div>
+                            <p class="review-text">
+                                محصول بسیار با کیفیتی بود. رنگ زیبایی دارد و کاملاً با توضیحات ارائه شده مطابقت داشت. پیشنهاد می‌کنم.
+                            </p>
+                        </div>
+                        
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="review-author">فاطمه احمدی</span>
+                                <span class="review-date">۱۴۰۲/۰۴/۲۸</span>
+                            </div>
+                            <div class="review-rating">★★★★☆</div>
+                            <p class="review-text">
+                                کیفیت خوبی دارد اما بسته‌بندی می‌توانست بهتر باشد. در کل از خریدم راضی هستم.
+                            </p>
+                        </div>
+                        
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="review-author">رضا کریمی</span>
+                                <span class="review-date">۱۴۰۲/۰۴/۱۰</span>
+                            </div>
+                            <div class="review-rating">★★★★★</div>
+                            <p class="review-text">
+                                عالی بود! دقیقاً همان چیزی بود که انتظار داشتم. ارسال سریع و بسته‌بندی عالی.
+                            </p>
+                        </div>
+                        
+                        <button class="btn btn-secondary" style="margin-top: 20px;">
+                            مشاهده همه نظرات (47)
+                        </button>
+                    </div>
+                    
+                    <!-- فرم نظر دهی -->
+                    <div class="review-form" style="margin-top: 30px;">
+                        <h3>ثبت نظر جدید</h3>
+                        <form id="reviewForm">
+                            <div class="form-group">
+                                <label for="name" class="form-label">نام شما *</label>
+                                <input type="text" id="name" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">ایمیل</label>
+                                <input type="email" id="email" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">امتیاز شما *</label>
+                                <div class="stars-rating">
+                                    <span class="star" data-rating="5">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="1">★</span>
+                                </div>
+                                <input type="hidden" id="rating" name="rating" value="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="review" class="form-label">نظر شما *</label>
+                                <textarea id="review" class="form-control form-textarea" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">ثبت نظر</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- تب پرسش و پاسخ -->
+                <div class="tab-pane" id="qa">
+                    <h3>پرسش و پاسخ درباره محصول</h3>
+                    <p>در این بخش می‌توانید پرسش‌های خود را درباره این محصول مطرح کنید یا به پرسش‌های دیگران پاسخ دهید.</p>
+                    
+                    <div class="qa-list" style="margin-top: 20px;">
+                        <div class="qa-item" style="padding: 15px 0; border-bottom: 1px solid var(--border-color);">
+                            <div style="font-weight: 600; color: var(--primary-color);">آیا این محصول گارانتی دارد؟</div>
+                            <div style="margin-top: 5px; color: var(--secondary-color); font-size: 14px;">پرسیده شده توسط: محمد رضایی در ۱۴۰۲/۰۳/۱۲</div>
+                            <div style="margin-top: 10px; background-color: #f8f9fa; padding: 10px; border-radius: 6px;">
+                                <div style="font-weight: 600; margin-bottom: 5px;">پاسخ فروشگاه:</div>
+                                <div>بله، این محصول دارای 24 ماه گارانتی از تاریخ خرید می‌باشد.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="qa-item" style="padding: 15px 0; border-bottom: 1px solid var(--border-color);">
+                            <div style="font-weight: 600; color: var(--primary-color);">رنگ این محصول ثابت است یا ممکن است تغییر کند؟</div>
+                            <div style="margin-top: 5px; color: var(--secondary-color); font-size: 14px;">پرسیده شده توسط: زهرا حسینی در ۱۴۰۲/۰۲/۲۵</div>
+                            <div style="margin-top: 10px; background-color: #f8f9fa; padding: 10px; border-radius: 6px;">
+                                <div style="font-weight: 600; margin-bottom: 5px;">پاسخ فروشگاه:</div>
+                                <div>رنگ این محصول کاملاً ثابت بوده و در برابر شستشو و نور خورشید مقاوم است.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="qa-form" style="margin-top: 30px;">
+                        <h4>پرسش خود را مطرح کنید</h4>
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">پرسش شما *</label>
+                                <textarea class="form-control form-textarea" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">ثبت پرسش</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% show_similar_product product=object %}
+    </div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+        
+<script>
+    // تغییر تصویر اصلی با کلیک بر روی تصاویر کوچک
+    function changeImage(element) {
+        const mainImage = document.getElementById('mainImage');
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        
+        thumbnails.forEach(thumb => thumb.classList.remove('active'));
+        element.classList.add('active');
+        
+        mainImage.src = element.src.replace('200x200', '800x800');
+        mainImage.alt = element.alt;
+    }
+    
+    // سیستم امتیازدهی با ستاره‌ها
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.getAttribute('data-rating');
+            ratingInput.value = rating;
+            
+            stars.forEach(s => {
+                if (s.getAttribute('data-rating') <= rating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+    });
+    
+    // ارسال فرم نظر
+    const reviewForm = document.getElementById('reviewForm');
+    
+    reviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const rating = document.getElementById('rating').value;
+        const reviewText = document.getElementById('review').value;
+        
+        if (rating === '0') {
+            alert('لطفاً به محصول امتیاز دهید');
+            return;
+        }
+        
+        // در اینجا می‌توانید اطلاعات را به سرور ارسال کنید
+        // برای نمونه، نظر جدید را به لیست نظرات اضافه می‌کنیم
+        
+        const reviewsSection = document.querySelector('#reviews .reviews-section');
+        const newReview = document.createElement('div');
+        newReview.className = 'review';
+        
+        const now = new Date();
+        const dateString = now.toLocaleDateString('fa-IR');
+        
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            starsHtml += i <= rating ? '★' : '☆';
+        }
+        
+        newReview.innerHTML = `
+            <div class="review-header">
+                <span class="review-author">${name}</span>
+                <span class="review-date">${dateString}</span>
+            </div>
+            <div class="review-rating">${starsHtml}</div>
+            <p class="review-text">${reviewText}</p>
+        `;
+        
+        reviewsSection.insertBefore(newReview, reviewsSection.firstChild);
+        
+        // ریست فرم
+        reviewForm.reset();
+        stars.forEach(star => star.classList.remove('active'));
+        ratingInput.value = '0';
+        
+        alert('نظر شما با موفقیت ثبت شد. سپاس!');
+    });
+    
+    // تغییر تب‌ها
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            
+            this.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load humanize %}
+
+<!-- محصولات مرتبط -->
+<div class="related-products" style="margin-bottom: 20rem;">
+    <h2 class="section-title">محصولات جدید</h2>
+    <div class="products-grid">
+        {% for product in latest_products %}
+        <div class="product-card">
+            <img src="{{ product.image.url }}" alt="محصول مرتبط 1" class="product-card-img">
+            <div class="product-card-body">
+                <a class="product-card-title" href="{% url 'shop:product-detail' pk=product.id %}" style="font-size: 20px;text-align: center; text-decoration: none;">{{ product.name }}</a>
+                {% if product.is_discounted %}
+                    <div class="product-card-price" style="font-size: 10px;text-align: center;text-decoration: line-through;">{{ product.price|intcomma }} تومان</div>
+                    <div class="product-card-price" style="font-size: 15px;text-align: center;">{{ product.get_price_after_sale|intcomma }} تومان</div>
+                    <div class="product-card-price" style="font-size: 10px;text-align: center;color: black;">{{ product.discount_percent }}% تخفیف</div>
+                {% else %} 
+                   <div class="product-card-price" style="font-size: 15px;text-align: center;">{{ product.price|intcomma }} تومان</div>
+                {% endif %}
+                <a href="{% url 'shop:product-detail' pk=product.id %}" style="float: left; margin: 20px;">ادامه ...</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

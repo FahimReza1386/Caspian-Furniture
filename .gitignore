@@ -1,0 +1,4 @@
+core/media/
+core/*/__pycache__/
+*.pyc
+*.pyo
