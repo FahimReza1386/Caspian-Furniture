@@ -70,4 +70,4 @@ class Verify_url(SuccessMessageMixin, View):
             messages.error(request, "لینک تایید منقضی شده است.")
         except (InvalidTokenError, Exception):
             messages.error(request, "لینک تایید نامعتبر است.")
-        return redirect("website:index")    
+        return redirect("website:index")        

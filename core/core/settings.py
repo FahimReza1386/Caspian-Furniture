@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'website',
     'accounts',
     'shop',
+    'drf_yasg',
+    'rest_framework',
+    "rest_framework.authtoken",
+    'rest_framework_simplejwt',
 
 
     'colorfield',
@@ -158,3 +162,13 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD" , default="")
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+# Rest_FrameWord Setting .
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
