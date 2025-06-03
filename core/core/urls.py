@@ -43,6 +43,9 @@ urlpatterns = [
     path("", include("website.urls")),
     path("accounts/", include("accounts.urls")),
     path("shop/", include("shop.urls")),
+    path("cart/", include("cart.urls")),
+
+
     path("swagger/",schema_view.with_ui("swagger", cache_timeout=0), name="shema-swagger-ui"),
     path("redoc/",schema_view.with_ui("redoc", cache_timeout=0),name="schema-redoc"),
 ]
