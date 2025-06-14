@@ -61,11 +61,10 @@
 					{% if request.user.is_authenticated %}
 						<li><a class="nav-link" href="#"><img src="{% static 'img/user.svg' %}"></a></li>
 					{% endif %}
-					<li><a class="nav-link" href="cart.html"><img src="{% static 'img/cart.svg' %}"></a></li>
+					<li><a class="nav-link" href="{% url 'cart:cart-summary' %}"><img src="{% static 'img/cart.svg' %}"><span>{{ cart.get_total_quantity }}</span></a></li>
 				</ul>
 			</div>
 		</div>
-
 	</nav>
 	<!-- End Header/Navigation -->
 
@@ -192,7 +191,79 @@
 	<script src="{% static 'js/tiny-slider.js' %}"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	{% block extra_js %}{% endblock %}
 	{% include 'messages.html' %}
+	<script>
+		function AddProductToCart(product_id, qty){
+			$.ajax({
+				type:"POST",
+				url: "{% url 'cart:add-product' %}",
+				data:{
+					csrfmiddlewaretoken:"{{ csrf_token }}",
+					product_id :product_id,
+					qty :qty
+				},
+				success: function(response){
+					window.location.reload()
+				},
+				error: function (err,errmsg,xhr) {
+					console.log(err)
+				}
+			});
+		}
+		function DeleteProductToCart(product_id){
+			$.ajax({
+				type:"POST",
+				url: "{% url 'cart:delete-product' %}",
+				data:{
+					csrfmiddlewaretoken:"{{ csrf_token }}",
+					product_id :product_id
+				},
+				success: function(response){
+					window.location.reload()
+				},
+				error: function (err,errmsg,xhr) {
+					console.log(err)
+				}
+			});
+		}
+		function PlusProductToCart(product_id, qty){
+			quantity = parseInt(qty) + 1
+			$.ajax({
+				type:"POST",
+				url: "{% url 'cart:update-product-qty' %}",
+				data:{
+					csrfmiddlewaretoken:"{{ csrf_token }}",
+					product_id :product_id,
+					qty:quantity
+				},
+				success: function(response){
+					window.location.reload()
+				},
+				error: function (err,errmsg,xhr) {
+					console.log(err)
+				}
+			});
+		}
+		function MinusProductToCart(product_id, qty){
+			quantity = parseInt(qty) - 1
+			$.ajax({
+				type:"POST",
+				url: "{% url 'cart:update-product-qty' %}",
+				data:{
+					csrfmiddlewaretoken:"{{ csrf_token }}",
+					product_id :product_id,
+					qty:quantity
+				},
+				success: function(response){
+					window.location.reload()
+				},
+				error: function (err,errmsg,xhr) {
+					console.log(err)
+				}
+			});
+		}
+	</script>
 </body>
 </html>

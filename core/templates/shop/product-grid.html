@@ -74,11 +74,11 @@
 					<img src="{{ object.image.url }}" class="img-fluid product-thumbnail">
 					<h3 class="product-title">{{ object.name }}</h3>
 					<strong class="product-price">{{ object.price|intcomma }} تومان</strong>
-
-					<span class="icon-cross">
-						<img src="{% static 'img/cross.svg' %}" class="img-fluid">
-					</span>
 				</a>
+				<span class="icon-cross">
+					<button type="button" class="btn btn-sm" style="float: left;margin: 0 5rem;border-radius: 50%;" onclick="AddProductToCart('{{ object.id }}',1)">&plus;</button>
+				</span>
+				
 			</div>
 			<!-- End Column 1 -->
 			{% endfor %}
@@ -117,12 +117,6 @@
 					</button>
 				</li>
 				{% endif %}
-
-
-
-
-
-
 		</ul>
 	</nav>
 	{% endif %}

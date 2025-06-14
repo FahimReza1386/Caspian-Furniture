@@ -4,9 +4,10 @@ from shop.models import SofaModel, SofaStatusType
 
 class CartSession:
     total_payment_price = 0
+    total_price = 0
     def __init__(self, session):
         self.session = session
-        self._cart = self.session.setdefault("cart", {"item":[]})
+        self._cart = self.session.setdefault("cart", {"items":[]})
 
     def add_product(self, product_id, qty):
         quantity = int(qty)
@@ -36,10 +37,16 @@ class CartSession:
         self.save()
 
     def update_product_qty(self, product_id, qty):
-        for item in self._cart["items"]:
-            if product_id == item["product_id"]:
-                item["quantity"] = int(qty)
-                break
+        quantity = int(qty)
+        if product_id and qty:
+            for item in self._cart["items"]:
+                if product_id == item["product_id"]:
+                    if quantity <= 10:
+                        item["quantity"] = quantity 
+                        break
+                    else:
+                        item["quantity"] = 10
+                        break
         self.save()
 
     def get_cart_dict(self):
@@ -52,7 +59,9 @@ class CartSession:
             item["product_obj"] = product_obj
             total_price = int(item["quantity"]) * product_obj.get_price_after_sale()
             item["total_price"] = total_price
-            self.total_payment_price += total_price
+            total_tax = round((total_price*10)/100)
+            self.total_payment_price += total_price + total_tax
+            self.total_price += total_price
 
         return cart_items
     
@@ -62,8 +71,11 @@ class CartSession:
     
     def get_total_payment_price(self):
         return self.total_payment_price
-
-
+    
+    
+    def get_total_price(self):
+        return self.total_price
+    
     def sync_cart_items_from_db(self, user):
         cart, created = CartModel.objects.get_or_create(user=user)
         cart_items = CartItemModel.objects.filter(cart=cart)
