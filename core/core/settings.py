@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'shop',
     'cart',
+    'order',
     'drf_yasg',
     'rest_framework',
     "rest_framework.authtoken",

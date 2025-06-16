@@ -44,6 +44,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("shop/", include("shop.urls")),
     path("cart/", include("cart.urls")),
+    path("order/", include("order.urls")),
 
 
     path("swagger/",schema_view.with_ui("swagger", cache_timeout=0), name="shema-swagger-ui"),
