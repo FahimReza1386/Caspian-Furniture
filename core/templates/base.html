@@ -19,7 +19,7 @@
 	<link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet">
 	<link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<link rel="stylesheet" href="{% static 'toastify/toastify.css' %}">
 	{% block extra_css %}{% endblock %}
 	<title>مبلمان کاسپین</title>
 </head>
@@ -190,8 +190,10 @@
 	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 	<script src="{% static 'js/tiny-slider.js' %}"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="{% static 'toastify/toastify-es.js' %}"></script>
+	<script src="{% static 'toastify/toastify.js' %}"></script>
+
 	{% block extra_js %}{% endblock %}
 	{% include 'messages.html' %}
 	<script>

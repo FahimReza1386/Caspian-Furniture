@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block extra_css %}{% endblock %}
+
+
+{% block content %}
+
+
+<div class="untree_co-section">
+    <div class="container">
+      <form action="." method="post" id="checkoutform">
+      <div class="row">
+          {% csrf_token %}
+        <div class="col-md-6 mb-5 mb-md-0">
+          <h2 class="h3 mb-3 text-black">جزئیات صورتحساب</h2>
+          <div class="p-3 p-lg-5 border bg-white">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="c_fname" class="text-black">نام :<span class="text-danger">*</span></label>
+                <input type="text"  readonly class="form-control" id="c_fname" name="first_name" value="{{ request.user.user_profile.first_name }}">
+              </div>
+              <div class="col-md-6">
+                <label for="c_fname" class="text-black">نام خانوادگی :<span class="text-danger">*</span></label>
+                <input type="text"  readonly class="form-control" id="c_fname" name="last_name" value="{{ request.user.user_profile.last_name }}">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <select name="address_id" id="address_id" class="form-select form-select-sm text-center">
+                <option selected>انتخاب آدرس تحویل </option>
+                {% for address in addressess %}
+                <option class="address_id" value="{{ address.id }}">{{ address.address }}-{{ address.state }}-{{ address.city }}-{{ address.zip_code }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <label for="c_address" class="text-black">آدرس تحویل : <span class="text-danger">*</span></label>
+                <input type="text" readonly class="form-control" id="address_address">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="c_state_country" class="text-black">شهر :<span class="text-danger">*</span></label>
+                <input type="text"  readonly  class="form-control" placeholder="تهران" id="address_city" name="c_state_country">
+              </div>
+              <div class="col-md-6">
+                <label for="c_postal_zip" class="text-black">کد پستی :<span class="text-danger">*</span></label>
+                <input type="text"  readonly class="form-control" placeholder="۱۲۳۴۵۶۷۸۹۰" id="address_zip_code" name="c_postal_zip">
+              </div>
+            </div>
+
+            <div class="form-group row mb-5">
+              <div class="col-md-6">
+                <label for="c_email_address" class="text-black">آدرس ایمیل<span class="text-danger">*</span></label>
+                <input type="text"  readonly class="form-control" id="c_email_address" name="" value="{{ request.user.email }}">
+              </div>
+              <div class="col-md-6">
+                <label for="c_phone" class="text-black">شماره تلفن :<span class="text-danger">*</span></label>
+                <input type="text"  readonly class="form-control" id="c_phone" name="c_phone" value="{{ request.user.user_profile.phone_number }}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="c_order_notes" class="text-black">توضیحات تکمیلی :</label>
+              <textarea name="c_order_notes" id="c_order_notes" cols="30" rows="5"  class="form-control" placeholder="نظرات و پیشنهاد و توصیه های خود را وارد کنید .."></textarea>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <h2 class="h3 mb-3 text-black">کد تخفیف :</h2>
+              <div class="p-3 p-lg-5 border bg-white">
+
+                <label for="c_code" class="text-black mb-3">کد تخفیف خود را وارد کنید ..</label>
+                <div class="input-group w-75 couponcode-wrap">
+                  <input type="text" class="form-control me-2" id="coupon_code" name="coupon" placeholder="کد تخفیف" aria-label="Coupon Code" aria-describedby="button-addon2">
+                  <div class="input-group-append">
+                    <button class="btn btn-primary btn-sm" onclick="ValidationCoupon()" type="button">اعمال تخفیف</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <h2 class="h3 mb-3 text-black">سفارشات شما</h2>
+              <div class="p-3 p-lg-5 border bg-white">
+                <table class="table site-block-order-table mb-5">
+                  <thead>
+                    <th>محصول</th>
+                    <th>مبلغ کل</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Top Up T-Shirt <strong class="mx-2">x</strong> 1</td>
+                      <td>$250.00</td>
+                    </tr>
+                    <tr>
+                      <td>Polo Shirt <strong class="mx-2">x</strong>   1</td>
+                      <td>$100.00</td>
+                    </tr>
+                    <tr class="m-3">
+                      <td class="text-black font-weight-bold"><strong>جمع سبد خرید :</strong></td>
+                      <td class="text-black" id="total_price">{{ total_price|intcomma }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>مالیات :</strong></td>
+                      <td class="text-black" id="total_tax">{{ total_tax|intcomma }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>جمع کل :</strong></td>
+                      <td class="text-black font-weight-bold" id="total_payment_price"><strong>{{ total_payment_price|intcomma }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <select name="" id="" class="form-select form-select-sm text-center mb-3">
+                  <option selected>نحوه پرداخت مبلغ</option>
+                  <option value="1">پرداخت از کیف پول</option>
+                  <option value="2">پرداخت آنلاین</option>
+                  <option value="">پرداخت درب محل</option>
+                </select>
+
+                <div class="form-group">
+                  <button class="btn btn-black btn-lg py-3 btn-primary" form="checkoutform">سفارش دهید</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+      <!-- </form> -->
+    </div>
+  </div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+{% for item in addressess %}
+<script>
+  // تعریف دیکشنری آدرس‌ها در جاوااسکریپت
+  const addresses = {
+      {% for address in addressess %}
+          "{{ address.id }}": {
+              address: "{{ address.address }}",
+              state: "{{ address.state }}",
+              zip_code: "{{ address.zip_code }}"
+          }{% if not loop.last %},{% endif %}
+      {% endfor %}
+  };
+
+  $(document).ready(function() {
+      $("#address_id").on("change", function () {
+          const selectedId = $(this).val();
+
+          if (addresses[selectedId]) {
+              $("#address_address").val(addresses[selectedId].address);
+              $("#address_city").val(addresses[selectedId].state);
+              $("#address_zip_code").val(addresses[selectedId].zip_code);
+          } else {
+              // اگر گزینه‌ای غیر معتبر یا انتخاب نشده بود، فیلدها رو پاک کن
+              $("#address_address").val("");
+              $("#address_city").val("");
+              $("#address_zip_code").val("");
+          }
+      });
+  });
+</script>
+
+{% endfor %}
+<script>
+
+   function applyDiscount(total_price, total_tax, total_payment_price) {
+      const formatter = new Intl.NumberFormat();
+
+      const formattedPrice = formatter.format(total_price);
+      const formattedTax = formatter.format(total_tax);
+      const formattedPaymentPrice = formatter.format(total_payment_price);
+
+      $("#total_tax").html(formattedTax);
+      $("#total_price").html(formattedPrice);
+      $("#total_payment_price").html(formattedPaymentPrice);
+  }
+  function ValidationCoupon(){
+    let coupon = $("#coupon_code").val()
+    $.ajax({
+      url: "{% url 'order:validation-coupon' %}",
+      method:"POST",
+      data: {
+        coupon:coupon,
+        csrfmiddlewaretoken:"{{ csrf_token }}"
+      },
+      success: function (response){
+        Toastify({
+          text:response.message,
+          className: `info`,
+          style: {
+            background: "blue",
+          }
+        }).showToast();
+        applyDiscount(response.total_price,response.total_tax, response.total_payment_price)
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          Toastify({
+              text:jqXHR.responseJSON.message,
+              className: `error`,
+              style: {
+                background: "red",
+              }
+            }).showToast();
+          
+            }
+    });
+  };
+
+</script>
+
+
+{% endblock %}

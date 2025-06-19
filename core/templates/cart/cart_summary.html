@@ -98,6 +98,22 @@
                 <strong class="text-black">{{ total_tax|intcomma }}</strong>
               </div>
             </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <span class="text-black">درصد تخفیف :</span>
+              </div>
+              <div class="col-md-6 text-right">
+                <strong class="text-black">{{ total_tax|intcomma }}</strong>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <span class="text-black">مبلغ کسری :</span>
+              </div>
+              <div class="col-md-6 text-right">
+                <strong class="text-black">{{ total_tax|intcomma }}</strong>
+              </div>
+            </div>
             <div class="row mb-5">
               <div class="col-md-6">
                 <span class="text-black">جمع کل :</span>
@@ -109,7 +125,9 @@
 
             <div class="row">
               <div class="col-md-12">
-                <button class="btn btn-black btn-lg py-3 btn-secondary" onclick="window.location='checkout.html'">نهایی کردن سفارش</button>
+                <form action="{% url 'order:checkout' %}">
+                  <button class="btn btn-black btn-lg py-3 btn-secondary" type="submit">نهایی کردن سفارش</button>
+                </form>
               </div>
             </div>
           </div>

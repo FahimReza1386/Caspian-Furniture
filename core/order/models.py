@@ -61,9 +61,12 @@ class OrderModel(models.Model):
 
     def __str__(self):
         return f"{self.user.email}-{self.id}"
+    
+    def calculate_total_price(self):
+        return sum(item.price * item.quantity for item in self.order_items.all())
 
 class OrderItemModel(models.Model):
-    order= models.ForeignKey(OrderModel, on_delete=models.CASCADE)
+    order= models.ForeignKey(OrderModel, on_delete=models.CASCADE, related_name="order_items")
     product = models.ForeignKey("shop.SofaModel", on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=12, decimal_places=0, default=0)
