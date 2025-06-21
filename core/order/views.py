@@ -7,6 +7,8 @@ from .forms import CheckOutForm
 from .models import OrderItemModel, OrderModel, CouponModel, UserAddressModel
 from datetime import timezone
 from cart.models import CartModel
+from payment.zarinpal_client import ZarinPalBox
+from payment.models import PaymentModel, PaymentStatusType
 from django.http import JsonResponse
 from cart.cart import CartSession
 from decimal import Decimal
@@ -34,7 +36,7 @@ class OrderCheckoutView(LoginRequiredMixin, SuccessMessageMixin, FormView):
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
-        return redirect(reverse_lazy("order:completed"))
+        return redirect(self.create_payment_url(order))
         
     def create_order(self, address):
         order = OrderModel.objects.create(
@@ -76,10 +78,19 @@ class OrderCheckoutView(LoginRequiredMixin, SuccessMessageMixin, FormView):
         total_payment_price = (int(total_price)+int(total_tax))
         context["total_payment_price"] = total_payment_price
         return context
-    
 
-    def create_payment_url(self):
-        pass
+
+    def create_payment_url(self, order):
+        zarinpal = ZarinPalBox()
+        response = zarinpal.payment_request(amount=float(order.total_price))
+        data= response["data"]
+        authority = data["authority"]
+        payment_obj = PaymentModel.objects.create(authority_id = authority, amount= order.total_price)
+
+        order.payment = payment_obj
+        order.save()
+
+        return zarinpal.generate_payment_url(authority=authority)
 
     
     def clear_cart(self, cart):

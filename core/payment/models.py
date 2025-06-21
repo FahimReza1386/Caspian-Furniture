@@ -11,7 +11,7 @@ class PaymentStatusType(models.IntegerChoices):
 
 class PaymentModel(models.Model):
     authority_id = models.CharField(max_length=300)
-    ref_ir = models.BigIntegerField(null=True, blank=True)
+    ref_id = models.BigIntegerField(null=True, blank=True)
     amount = models.DecimalField(max_digits=10, default=0, decimal_places=0)
     response_json = JSONField(default=dict)
     response_code = models.IntegerField(null=True, blank=True)

@@ -52,6 +52,8 @@ class OrderModel(models.Model):
     city = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=50)
 
+    payment = models.ForeignKey("payment.PaymentModel", on_delete=models.SET_NULL, null=True, blank=True)
+
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
