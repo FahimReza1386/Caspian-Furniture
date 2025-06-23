@@ -1,0 +1,215 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}امنیت{% endblock %}
+
+{% block extra_css %}
+
+    <style>
+    body{
+        width: 70% !important;
+        position: initial !important;
+        margin: 5rem auto;
+    }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+<div style="width: 50%;margin: 0 auto;">
+    <div class="col-lg-12">
+        <div class="d-grid gap-3 gap-lg-5">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-header-title">ویرایش تصویر</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'dashboard:dash_admin:profile-image-edit' %}" method="post" class="mt-2" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- Form --> 
+                        <div class="row mb-4">
+                            <label class="col-sm-3 col-form-label form-label mt-4">عکس پروفایل :</label>
+    
+                            <div class="col-sm-9">
+                                <!-- Media -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar -->
+                                    <label class="avatar avatar-xl avatar-circle"  style="border-radius: 50%;" for="avatarUploader">
+                                        <img id="avatarImg" class="avatar-img" src="{{ request.user.user_profile.image.url}}"
+                                            alt="Image Description">
+                                    </label>
+                                    
+                                    <div class="d-grid d-sm-flex gap-2 me-4">
+                                        <div class="form-attachment-btn btn btn-white btn-sm">آپلود عکس
+                                            <input type="file" hidden name="image" class="js-file-attach form-attachment-btn-label"
+                                                id="avatarUploader" data-hs-file-attach-options='{
+                                          "textTarget": "#avatarImg",
+                                          "mode": "image",
+                                          "targetAttr": "src",
+                                          "resetTarget": ".js-file-attach-reset-img",
+                                          "resetImg": "{% static 'img/160x160/img1.jpg' %}", "allowTypes" :
+                                                [".png", ".jpeg" , ".jpg" ] }'>
+                                        </div>
+                                        <!-- End Avatar -->
+                                        <button type="submit" class="btn btn-primary btn-sm">بروزرسانی</button>
+    
+                                        <button type="button" class="js-file-attach-reset-img btn btn-white btn-sm">حذف
+                                            کردن</button>
+                                    </div>
+                                </div>
+                                <!-- End Media -->
+                            </div>
+                        </div>
+                        <!-- End Form -->
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-header-title">اطلاعات پایه</h4>
+                </div>
+                <!-- Body -->
+                <div class="card-body mt-2">
+                  
+        
+                    <form method="post" action="{% url 'dashboard:dash_admin:profile-edit' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Form -->
+                        <div class="row mb-4 mt-3">
+                            <label for="firstNameLabel" class="col-sm-3 col-form-label form-label">نام و نام خانوادگی : </label>
+    
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="first_name" id="id_first_name"
+                                        placeholder="Clarice" aria-label="Clarice" value="{{ form.first_name.value }}">
+                                    <input type="text" class="form-control" name="last_name" id="id_last_name"
+                                        placeholder="Boone" aria-label="Boone" value="{{ form.last_name.value }}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+    
+                        <!-- Form -->
+                        <div class="row mb-4">
+                            <label for="emailLabel" class="col-sm-3 col-form-label form-label">ایمیل :</label>
+    
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control text-center" name="email" id="emailLabel"
+                                    placeholder="clarice@example.com" aria-label="clarice@example.com"
+                                    value="{{ request.user.email }}" disabled>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+    
+                        <!-- Form -->
+                        <div class="js-add-field row mb-4" data-hs-add-field-options='{
+                        "template": "#addPhoneFieldTemplate",
+                        "container": "#addPhoneFieldContainer",
+                        "defaultCreated": 0
+                      }'>
+                            <label for="phoneLabel" class="col-sm-3 col-form-label form-label">تلفن : </label>
+    
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" class="js-input-mask form-control" name="phone_number" value="{{ form.phone_number.value }}" id="id_phone_number"
+                                        placeholder="0912xxxxxxx">
+    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+    
+    
+                        <!-- Form -->
+                        <div class="row mb-4">
+                            <label class="col-sm-3 col-form-label form-label">جنسیت :</label>
+    
+                            <div class="col-sm-9">
+                                <div class="input-group input-group-md-down-break">
+                                    <!-- Radio Check -->
+                                    <label class="form-control" for="id_gender_male">
+                                        <span class="form-check">
+                                            <input type="radio" class="form-check-input" name="gender"
+                                                id="id_gender_male" value="1" {% if form.gender.value == 1 %} checked {% endif %}>
+                                            <span class="form-check-label">مرد</span>
+                                        </span>
+                                    </label>
+                                    <!-- End Radio Check -->
+    
+                                    <!-- Radio Check -->
+                                    <label class="form-control" for="id_gender_female">
+                                        <span class="form-check">
+                                            <input type="radio" class="form-check-input" name="gender"
+                                                id="id_gender_female" value="2" {% if form.gender.value == 2 %} checked {% endif %}>
+                                            <span class="form-check-label">زن</span>
+                                        </span>
+                                    </label>
+                                    <!-- End Radio Check -->
+    
+                                    <!-- Radio Check -->
+                                    <label class="form-control" for="id_gender_other">
+                                        <span class="form-check">
+                                            <input type="radio" class="form-check-input" name="gender"
+                                                id="id_gender_other" value="3" {% if form.gender.value == 3 %} checked {% endif %}>
+                                            <span class="form-check-label">دیگر</span>
+                                        </span>
+                                    </label>
+                                    <!-- End Radio Check -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+    
+                        <!-- Form -->
+                        <div class="row align-items-center">
+                            <label for="disableAdCheckbox" class="col-sm-3 col-form-label form-label">غیرفعال کردن تبلیغات
+                                <span class="badge badge-primary text-uppercase ms-1">پرو</span></label>
+    
+                            <div class="col-sm-9">
+                                <!-- Check -->
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="disableAdCheckbox">
+                                    <label class="form-check-label" for="disableAdCheckbox">با حساب حرفه ای خود، می توانید
+                                        تبلیغات
+                                        را در سراسر سایت غیرفعال کنید.</label>
+                                </div>
+                                <!-- End Check -->
+                            </div>
+                        </div>
+                        <!-- End Form -->
+                        <div class="card-footer pt-0">
+                            <div class="d-flex justify-content-end gap-3">
+                                <a class="btn btn-danger" href="{% url 'dashboard:dash_admin:home' %}">لغو</a>
+                                <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- End Body -->
+    
+                <!-- Footer -->
+              
+                <!-- End Footer -->
+            </div>
+            <!-- End Card -->
+    
+        </div>
+    </div>
+    <!-- End Col -->
+    </div>
+    <!-- End Row -->
+    </div>
+    <!-- End Content -->
+    
+</div>
+{% include '../sidebar.html' %}
+
+
+{% endblock content %}
+
+    
+
+{% block extra_js %}{% endblock %}
