@@ -1,1 +1,17 @@
-<h1>hello admin</h1>
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_css %}{% endblock %}
+
+
+{% block content %}
+
+  <h1>سلام ادمین گرامی . به پلنت خوش آمدی.</h1>
+
+  {% include './sidebar.html' %}
+
+{% endblock %}
+
+
+{% block extra_js %}{% endblock %}

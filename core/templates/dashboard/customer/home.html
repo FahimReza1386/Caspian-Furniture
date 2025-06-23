@@ -1,1 +1,15 @@
-<h1>hello customer</h1>
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_css %}{% endblock %}
+
+
+{% block content %}
+
+  {% include './sidebar.html' %}
+
+{% endblock %}
+
+
+{% block extra_js %}{% endblock %}

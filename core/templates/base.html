@@ -59,7 +59,7 @@
 
 				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 					{% if request.user.is_authenticated %}
-						<li><a class="nav-link" href="#"><img src="{% static 'img/user.svg' %}"></a></li>
+						<li><a class="nav-link" href="{% url 'dashboard:home' %}"><img src="{% static 'img/user.svg' %}"></a></li>
 					{% endif %}
 					<li><a class="nav-link" href="{% url 'cart:cart-summary' %}"><img src="{% static 'img/cart.svg' %}"><span>{{ cart.get_total_quantity }}</span></a></li>
 				</ul>
