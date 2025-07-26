@@ -1,6 +1,7 @@
 from django.db import models
 from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from ckeditor.fields import RichTextField    
 from decimal import Decimal
 # Create your models here.
 
@@ -59,11 +60,11 @@ class SofaModel(models.Model):
     user= models.ForeignKey("accounts.User", on_delete=models.PROTECT)
     name= models.CharField(max_length=100)
     brand= models.ForeignKey(SofaBrandModel, on_delete=models.PROTECT)
-    description = models.CharField(max_length=200)
+    description = RichTextField(max_length=400)
     category= models.ManyToManyField(SofaCategoryModel)
     color=models.ManyToManyField(SofaColorsModel)
     stock= models.IntegerField()
-    image=models.ImageField(upload_to="products/")
+    image=models.ImageField(upload_to="products/", null=True, blank=True)
     dimentions=models.CharField(max_length=50)
     material= models.ManyToManyField(SofaMaterialModel)
     price=models.DecimalField(default=0, max_digits=10, decimal_places=0)

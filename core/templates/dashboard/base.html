@@ -25,7 +25,15 @@
 	</style>
 </head>
 <body dir="rtl">
-    {% block content %}{% endblock %}
+	{% if request.user.is_authenticated %}
+		{% if user.type == 2 or user.type == 3 %}
+			{% include 'dashboard/admin/sidebar.html' %}
+		{% else %}
+			{% include 'dashboard/customer/sidebar.html' %}
+		{% endif %}
+
+	{% endif %}
+	{% block content %}{% endblock %}
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 	<script src="{% static 'js/tiny-slider.js' %}"></script>
@@ -33,7 +41,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script src="{% static 'toastify/toastify-es.js' %}"></script>
 	<script src="{% static 'toastify/toastify.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+    
+	{% block extra_js %}{% endblock %}
     {% include 'messages.html' %}
 </body>
 </html>

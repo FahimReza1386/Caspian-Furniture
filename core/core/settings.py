@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'payment',
     'dashboard',
     'drf_yasg',
+    'ckeditor',
     'rest_framework',
     "rest_framework.authtoken",
     'rest_framework_simplejwt',
@@ -176,4 +177,14 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+}
+
+
+# settings.py
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
 }

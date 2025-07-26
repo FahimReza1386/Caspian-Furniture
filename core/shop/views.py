@@ -20,6 +20,8 @@ class ProductGridView(ListView):
         context["categories"] = SofaCategoryModel.objects.all()
         return context
 
+    
+
     def get_queryset(self):
         queryset =SofaModel.objects.filter(status=SofaStatusType.publish.value)
         if search_q := self.request.GET.get("q"):

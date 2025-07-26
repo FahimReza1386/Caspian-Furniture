@@ -13,7 +13,7 @@ class SofaBrandModelAdmin(admin.ModelAdmin):
 
 @admin.register(SofaMaterialModel)
 class SofaMaterialModelAdmin(admin.ModelAdmin):
-    list_display=("id", "name")
+    list_display=("id", "name") 
 
 @admin.register(SofaCategoryModel)
 class SofaCategoryModelAdmin(admin.ModelAdmin):

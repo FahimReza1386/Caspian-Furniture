@@ -1,0 +1,91 @@
+
+/* استایل اصلی برای ویرایشگر Quill */
+.quill-custom {
+    border-radius: 0.375rem;
+    background-color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* استایل برای کانتینر ویرایشگر */
+.js-quill {
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #fff;
+}
+
+/* استایل برای محتوای ویرایشگر */
+.ql-container {
+    font-family: inherit;
+    font-size: 1rem;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+/* استایل برای نوار ابزار ویرایشگر */
+.ql-toolbar {
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    border-bottom: none;
+    background-color: #f9fafb;
+}
+
+/* استایل برای محتوای ویرایشگر زمانی که فوکوس شده */
+.js-quill:focus-within {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* استایل برای متن placeholder */
+.ql-editor.ql-blank::before {
+    color: #9ca3af;
+    font-style: normal;
+    font-family: inherit;
+}
+
+/* استایل برای input مخفی */
+input[type="hidden"][name="description"] {
+    display: none;
+}
+
+/* استایل‌های واکنش‌گرا */
+@media (max-width: 767.98px) {
+    .js-quill {
+        height: 12rem !important;
+    }
+}
+
+
+
+/* استایل‌های تم تاریک */
+.dark .quill-custom,
+.dark .js-quill {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+.dark .ql-toolbar {
+    background-color: #111827;
+    border-color: #374151;
+}
+
+.dark .ql-container {
+    background-color: #1f2937;
+    color: #f3f4f6;
+}
+
+.dark .col-md-6.mb-3 label {
+    color: #f9fafb;}
+
+/* استایل کلی برای بخش توضیحات */
+.col-md-6.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* استایل برای لیبل */
+.col-md-6.mb-3 label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #3b3b3b;
+}

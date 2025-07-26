@@ -1,0 +1,235 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}محصولات{% endblock %}
+
+{% block content %}
+
+        <div class="col-lg-12">
+          <!-- Card -->
+          <div class="card">
+
+            <!-- Body -->
+            <div class="card-body">
+                <h5 class="">لیست محصولات</h5>
+                                 <a class="btn btn-primary" style="width: 8rem;float: left;margin: 0 9rem;" href="{% url 'dashboard:dash_admin:product-create' %}">ایجاد کردن</a>
+
+
+              <div class="container pb-5">
+                <form class="row" action=".">
+
+                  <!-- Input Card -->
+                  <div class="col-md-2 py-1">
+                    <input type="text" class="form-control" placeholder="جستجوی" aria-label="جستجوی ایمیل" name="q" id="search-query-filter">
+
+                  </div>
+                  <!-- End Input Card -->
+                  <div class="col-md-3 py-1">
+                    <select class="form-select"  id="order-by-filter" name="order_by">
+                      <option value="" selected>بر اساس</option>
+                      <option value="-created_date">محصولات جدید</option>
+                      <option value="created_date">قدیمی ترین ها</option>
+                      <option value="price">ارزان ترین ها</option>
+                      <option value="-price">گران ترین ها</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 py-1">
+                    <select class="form-select"  id="page-size-filter" name="page_size">
+                      <option value="" selected>تعداد در صفحه</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 py-1">
+                    <select class="form-select" id="category-id-filter" name="category_id">
+                      <option value="" selected=>دسته بندی ها</option>
+                      {% for cat in categories %}
+                        
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-1 py-1">
+                    <button type="submit" class="btn btn-primary btn-search"><i class="bi-search"></i></button>
+                  </div>
+                </form>
+
+              </div>
+
+              <div class="row">
+                <!-- Table -->
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">نام محصول</th>
+                        <th scope="col">دسته بندی</th>
+                        <th scope="col">قیمت</th>
+                        <th scope="col">تعداد</th>
+                        <th scope="col">وضعیت</th>
+                        <th scope="col">تخفیف</th>
+                        <th scope="col">عملیات</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <tr>
+                        <th scope="row">1</th>
+                        <td>کیف کولی</td>
+                        <td>کیف</td>
+                        <td>150000</td>
+                        <td>13</td>
+                        <td><span class="badge bg-success">نشر شده</span></td>
+                        <td>0</td>
+                        <td>
+                          <a class="btn btn-sm btn-icon btn-ghost-secondary" href="./admin-account-products-single.html"><i class="bi-pencil-square"></i></a>
+                          <a class="btn btn-sm btn-icon btn-ghost-primary" href="./product-overview.html"><i class="bi-eye"></i></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>تیشرت مشکی</td>
+                        <td>تیشرت</td>
+                        <td>100000</td>
+                        <td>10</td>
+                        <td><span class="badge bg-danger">عدم انتشار</span></td>
+                        <td>10</td>
+                        <td>
+                          <a class="btn btn-sm btn-icon btn-ghost-secondary" href="./admin-account-products-single.html"><i class="bi-pencil-square"></i></a>
+                          <a class="btn btn-sm btn-icon btn-ghost-primary" href="./product-overview.html"><i class="bi-eye"></i></a>
+                        </td>
+                      </tr> -->
+                      {% for item in object_list %}
+                      <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{% for category in item.category.all %}
+                          {{ category.name }}{% if not forloop.last %} , {% endif %}{% endfor %}</td>
+                        <td>{{ item.price|intcomma }} تومان</td>
+                        <td>{{ item.stock }}</td>
+                        {% if item.status == 1 %}
+                        <td><span class="badge bg-success">نشر شده</span></td>
+                        {% else %}
+                        <td><span class="badge bg-danger">عدم انتشار</span></td>
+                        {% endif %}
+                        <td>%{{ item.discount_percent }}</td>
+                        <td>
+                          <a class="btn btn-sm btn-icon btn-ghost-secondary" href="{% url 'dashboard:dash_admin:product-edit' pk=item.pk %}"><i class="bi-pencil-square"></i></a>
+                            </td>
+                      </tr>
+                      {% endfor %}
+
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End Table -->
+
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-center">
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                    <button class="page-link" onclick="ChangePage(`{{ page_obj.next_page_number }}`)" aria-label="Next">
+                        <span aria-hidden="true">
+                          <i class="bi-chevron-double-left small"></i>
+                        </span>
+                      </button>
+                    </li>
+                  {% endif %} 
+      
+                    {% for i in page_obj.paginator.page_range %}
+                    {% if i == page_obj.number %}
+                      <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                      <li class="page-item"><button class="page-link" onclick="ChangePage(`{{ i }}`)">{{ i }}</button></li>
+                    {% endif %} 
+                  {% endfor %}
+                  {% if page_obj.has_previous %}
+                  <li class="page-item">
+                    <button class="page-link" onclick="ChangePage(`{{ page_obj.previous_page_number }}`)" aria-label="Previous">
+                      <span aria-hidden="true">
+                        <i class="bi-chevron-double-right small"></i>
+                      </span>
+                    </button>
+                  </li>
+                {% endif %}
+                  
+                    
+              
+                    
+                    
+                    
+                  </ul>
+                </nav>
+              {% endif %}
+
+              </div>
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+        <!-- End Col -->
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Content Section -->
+  </main>
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+
+<script>
+    function ChangePage(page_number) {
+      let current_url_params = new URLSearchParams(window.location.search)
+      current_url_params.set("page", page_number)
+      let new_url = window.location.pathname + "?" + current_url_params.toString()
+      window.location.href = new_url
+    }
+  </script>
+
+<script>
+
+    $(document).ready(function () {
+      let current_url_params = new URLSearchParams(window.location.search)
+      $("#order-by-filter").val(current_url_params.get("order_by") || "")
+      $("#page-size-filter").val(current_url_params.get("page_size") || "")
+      $("#search-query-filter").val(current_url_params.get("q") || "")
+      $("#category-id-filter").val(current_url_params.get("category_id") || "")
+
+    });
+    $('#page-size-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("page_size", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#order-by-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#category-id-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("category_id", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+
+  </script>
+
+{% endblock extra_js %}
